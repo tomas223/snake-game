@@ -1,4 +1,5 @@
-import styles from "./snake.module.css";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 
 import { SnakeCoordinates } from "../../types";
 
@@ -12,19 +13,23 @@ export const Snake = ({ coordinates, fieldSize }: Props) => {
     <>
       {coordinates.map((part, index) => (
         <div
-          className={styles.bodyCell}
           key={index}
           style={{
-            // position: "absolute",
             left: `${part.x * fieldSize}px`,
             top: `${part.y * fieldSize}px`,
             width: fieldSize + "px",
             height: fieldSize + "px",
-            backgroundColor: index === 0 ? "green" : "lightseagreen",
-            // borderRadius: "20%", // Added for a "curved" look
-            // transition: "left 0.3s, top 0.3s",
           }}
-        />
+          css={css`
+            position: absolute;
+            transition: left cubic-bezier(0.23, 1, 0.32, 1) 0.3s,
+              top cubic-bezier(0.23, 1, 0.32, 1) 0.3s;
+            border-radius: 20%;
+            background-color: ${index === 0 ? "green" : "lightseagreen"};
+          `}
+        >
+          
+        </div>
       ))}
     </>
   );

@@ -21,6 +21,8 @@ type GameState = {
   isCollision: boolean;
 };
 
+type GameStateSettings = Partial<Pick<GameState, "board">>;
+
 // const DUMMY_SNAKE_1 = [{ x: 10, y: 10 }];
 const DUMMY_SNAKE_3 = [
   { x: 8, y: 5 },
@@ -32,7 +34,7 @@ const DEFAULT_STATE: GameState = {
   player1: { snake: DUMMY_SNAKE_3, direction: "right" },
   food: [],
   board: { x: 50, y: 50 },
-  fieldSize: 16,
+  fieldSize: 40,
   gameTime: 0,
   isCollision: false,
 };
@@ -40,7 +42,8 @@ const DEFAULT_STATE: GameState = {
 type Actions =
   | { type: "MOVE_GAME_FORWARD" }
   | { type: "ADD_FOOD"; payload: Coordinate }
-  | { type: "CHANGE_SNAKE_1_DIRECTION"; payload: Direction };
+  | { type: "CHANGE_SNAKE_1_DIRECTION"; payload: Direction }
+  | { type: "RESET_GAME"; payload: GameStateSettings };
 
 function gameStateReducer(state: GameState, action: Actions): GameState {
   switch (action.type) {
@@ -64,9 +67,9 @@ function gameStateReducer(state: GameState, action: Actions): GameState {
       }
 
       if (
-        state.player1.snake.some((coord) =>
-          areSameCoordinates(coord, newSnakeHead)
-        )
+        state.player1.snake
+          .slice(0, -1)
+          .some((coord) => areSameCoordinates(coord, newSnakeHead))
       ) {
         return { ...state, isCollision: true };
       }
@@ -98,6 +101,11 @@ function gameStateReducer(state: GameState, action: Actions): GameState {
         ...state,
         food: [...state.food, action.payload],
       };
+    case "RESET_GAME":
+      return {
+        ...DEFAULT_STATE,
+        ...action.payload,
+      };
     case "CHANGE_SNAKE_1_DIRECTION": {
       const newDirection = action.payload;
       const directionVector = directionToVector(newDirection);
@@ -126,9 +134,7 @@ function gameStateReducer(state: GameState, action: Actions): GameState {
   }
 }
 
-export function useCreateGameState(
-  initialState?: Partial<Pick<GameState, "board">>
-) {
+export function useCreateGameState(initialState?: GameStateSettings) {
   const gameReducer = useReducer(gameStateReducer, {
     ...DEFAULT_STATE,
     ...initialState,

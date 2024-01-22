@@ -1,5 +1,6 @@
-import styles from "./food.module.css";
+/** @jsxImportSource @emotion/react */
 
+import { css } from "@emotion/react";
 import { Coordinate } from "../../types";
 
 type Props = {
@@ -8,25 +9,24 @@ type Props = {
 };
 
 export const Food = ({ coordinates, fieldSize }: Props) => {
-  // console.log("coordinates - food", coordinates);
+  const size = fieldSize + "px";
 
   return (
     <>
-      {coordinates.map((part, index) => (
+      {coordinates.map((part) => (
         <div
-          className={styles.foodItem}
-          key={index}
+          key={`${part.x}_${part.y}`}
           style={{
-            // position: "absolute",
             left: `${part.x * fieldSize}px`,
             top: `${part.y * fieldSize}px`,
-            height: fieldSize + "px",
-            width: fieldSize + "px",
-            // backgroundColor: "red",
-            // borderRadius: "50%", // Added for a "curved" look
           }}
+          css={css`
+            position: absolute;
+            line-height: ${size};
+            font-size: ${size};
+          `}
         >
-          {/* 🍎 */}
+          🍎
         </div>
       ))}
     </>

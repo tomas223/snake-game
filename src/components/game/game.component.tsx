@@ -1,4 +1,4 @@
-// App.tsx
+/** @jsxImportSource @emotion/react */
 import React, { useEffect } from "react";
 // import { handleKeyPress } from "../../utils/game-logic.utils";
 import { useCreateGameState } from "../../stores";
@@ -6,12 +6,15 @@ import { GameBoard } from "../game-board";
 import { Snake } from "../snake/snake.component";
 import { Food } from "../food";
 import { useInterval } from "usehooks-ts";
+import { css } from "@emotion/react";
+import { TouchController } from "../touch-controller";
 
 const GAME_SPEED_MS = 300;
+const BOARD = { x: 20, y: 20 };
 
 export const Game: React.FC = () => {
   const [gameState, updateGameState] = useCreateGameState({
-    board: { x: 20, y: 20 },
+    board: BOARD,
   });
   const { board, food, player1, fieldSize } = gameState;
 
@@ -51,7 +54,6 @@ export const Game: React.FC = () => {
     },
     gameState.isCollision ? null : GAME_SPEED_MS
   );
-;
 
   return (
     <div style={{ display: "flex", flexDirection: "row" }}>
@@ -67,7 +69,21 @@ export const Game: React.FC = () => {
         ) : (
           <p>Game: Running</p>
         )}
-        {/* <button>Restart</button> */}
+        <button
+          onClick={() =>
+            updateGameState({ type: "RESET_GAME", payload: { board: BOARD } })
+          }
+        >
+          Restart game
+        </button>
+
+        <div
+          css={css`
+            margin-top: 2rem;
+          `}
+        >
+          <TouchController onChange={() => {}} />
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,0 @@
-.foodItem {
-  position: absolute;
-  /* transition: left cubic-bezier(0.23, 1, 0.32, 1) 0.3s,
-    top cubic-bezier(0.23, 1, 0.32, 1) 0.3s; */
-  border-radius: 50%;
-  background-color: red;
-}
